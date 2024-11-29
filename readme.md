@@ -9,6 +9,6 @@ The Haikuverse is a website that creates haiku poems by randomly generating thre
 - Users can also like and comment on each other's poems.
 ## Tech Stack
 MERN Stack
-Front-End: HTML,CSS and React
-Back-End: NodeJS, Express
-Database: MongoDB
+- Front-End: HTML,CSS and React
+- Back-End: NodeJS, Express
+- Database: MongoDB
