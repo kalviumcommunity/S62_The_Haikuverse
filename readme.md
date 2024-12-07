@@ -1,4 +1,4 @@
-# Haikuverse
+# The Haikuverse
 
 The Haikuverse is a website that creates haiku poems by randomly generating three lines. Users can edit these poems by selecting from a collection of randomly generated words. Users can create, edit, save, share, and explore poems in a vibrant community. The platform allows for creativity by enabling users to choose words from a curated list to modify the generated haiku. Users can also interact with each other's poems by liking, commenting, and viewing others' creations in the Haikuverse community.
 
