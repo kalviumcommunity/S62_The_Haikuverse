@@ -17,3 +17,6 @@ The Haikuverse website is built using the MERN stack, with the following technol
 - Front-End: HTML,CSS anDd React
 - Back-End: Node.js and Express.js
 - Database: MongoDB
+
+## Deployed Link:
+https://s62-the-haikuverse.onrender.com/ping
