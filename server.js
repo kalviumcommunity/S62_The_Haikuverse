@@ -1,12 +1,20 @@
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  require('dotenv').config();
+}
 const express = require('express');
-const app = express();
+const connectDatabase = require('./DB/database.js');
 
-app.get('/ping', (req, res) => {
-  res.send('Pong');
+// dotenv.config({ path: './.env' });
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+
+app.get('/ping',(request,response)=>{
+    response.send('Hello World!');
 });
 
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port,()=>{
+    connectDatabase();
+    console.log(`Your server is running on http://localhost:${port}`);
 });
