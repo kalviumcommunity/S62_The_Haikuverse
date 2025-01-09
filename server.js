@@ -3,8 +3,9 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 }
 const express = require('express');
 
-const { getDbFn, connection } = require('./DB/mongo-client.js');
+const { getDB, connection } = require('./DB/mongo-client.js');
 const app = express();
+app.use(express.json());
 const port = process.env.PORT || 3000;
 
 
@@ -23,6 +24,8 @@ app.get('/', async (req, res) => {
 app.get('/ping',(request,response)=>{
     response.send('Hello World!');
 });
+
+app.use('/user-router',require('./routes/routes.js'));
 
 app.listen(port,()=>{
     // connectDatabase();
