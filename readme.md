@@ -14,9 +14,12 @@ The Haikuverse is a website that creates haiku poems by randomly generating thre
 
 The Haikuverse website is built using the MERN stack, with the following technologies:
 
-- Front-End: HTML,CSS anDd React
+- Front-End: HTML,tailwind CSS and React
 - Back-End: Node.js and Express.js
 - Database: MongoDB
 
-## Deployed Link:
+## Deployed BackEnd Link:
 https://s62-the-haikuverse.onrender.com/ping
+
+## Deployed FrontEnd Link:
+https://52dbb163.s62-the-haikuverse.pages.dev/
