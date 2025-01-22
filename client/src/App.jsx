@@ -2,6 +2,7 @@ function App() {
   return (
     <div className="App gradient-animation bg-gradient-to-b from-blue-950 via-blue-800 to-blue-500 text-white min-h-screen">
       {/* Full-Screen Landing Section */}
+      {/* <p className="text-2xl"> XYZ</p> */}
       <section className="h-screen w-full flex items-center justify-center section-padding">
         <div className="bg-opacity-50 w-full h-full flex items-center justify-center text-center text-white px-6 md:px-12 overlay-bg rounded-container">
           <div>
