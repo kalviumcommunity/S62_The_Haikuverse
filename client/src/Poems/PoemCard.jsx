@@ -1,6 +1,6 @@
 import HaikuComponent from './Poem.jsx';
 
-const App = () => {
+const Poem = () => {
   const poem1 = {
     line1: "Golden sunsets fade",
     line2: "Birds soar high in the cool sky",
@@ -41,4 +41,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Poem;

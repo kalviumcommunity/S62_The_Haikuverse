@@ -7,7 +7,8 @@ const { getDB, connection } = require('./DB/mongo-client.js');
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
-
+const cors = require('cors');
+app.use(cors());
 
 
 app.get('/', async (req, res) => {
