@@ -1,5 +1,7 @@
+// Users.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -9,11 +11,9 @@ function Users() {
     try {
       const response = await axios.get("http://localhost:8080/user-router/user");
       setUsers(response.data);
-      console.log(response.data);
     } catch (error) {
       setError("Error fetching users");
       console.error("Error fetching data:", error);
-      console.log(error);
     }
   };
 
@@ -27,16 +27,16 @@ function Users() {
         User Entities
       </h1>
       {error && <div className="text-red-500 text-center">{error}</div>}
+      
+      <Link to="/add-user">
+        <button className="bg-teal-500 text-white p-3 rounded-lg mb-6">Add New User</button>
+      </Link>
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {users.length > 0 ? (
           users.map((user) => (
-            <div
-              key={user._id}
-              className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white"
-            >
-              <h3 className="text-2xl font-semibold mb-2 text-purple-400">
-                {user.name}
-              </h3>
+            <div key={user._id} className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white">
+              <h3 className="text-2xl font-semibold mb-2 text-purple-400">{user.name}</h3>
               <p className="text-lg mb-1">
                 <span className="font-medium text-teal-200">Email:</span> {user.email}
               </p>
