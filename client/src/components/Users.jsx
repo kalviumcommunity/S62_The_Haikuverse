@@ -1,4 +1,3 @@
-// Users.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -14,6 +13,16 @@ function Users() {
     } catch (error) {
       setError("Error fetching users");
       console.error("Error fetching data:", error);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/user-router/${id}`);
+      setUsers(users.filter(user => user._id !== id)); 
+    } catch (error) {
+      setError("Error deleting user");
+      console.error("Error deleting user:", error);
     }
   };
 
@@ -43,6 +52,17 @@ function Users() {
               <p className="text-lg">
                 <span className="font-medium text-teal-200">User ID:</span> {user.userId}
               </p>
+              <div className="flex justify-between mt-4">
+                <Link to={`/update-user/${user._id}`}>
+                  <button className="bg-teal-500 text-white p-2 rounded-lg">Edit</button>
+                </Link>
+                <button
+                  onClick={() => deleteUser(user._id)}
+                  className="bg-red-500 text-white p-2 rounded-lg"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         ) : (
