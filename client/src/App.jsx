@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import PoemCard from './Poems/PoemCard'; 
 import Users from './components/Users'; 
 import AddUser from './components/AddUser'
+import UpdateUser from './components/UpdateUser';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           {/* Users Page Route */}
           <Route path="/users" element={<Users />} />
           <Route path="/add-user" element={<AddUser />} />
+          <Route path="/update-user/:id" element={<UpdateUser />} />
         </Routes>
 
         {/* Footer Section */}

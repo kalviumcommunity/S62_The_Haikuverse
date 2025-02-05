@@ -18,6 +18,21 @@ app.get("/user", async (req, res) => {
   }
 });
 
+app.get("/user/:id", async (req, res) => {
+  try {
+    const db = await getDB();
+    const { id } = req.params;
+    const userData = await db.findOne({ _id: new ObjectId(id) });
+    if (userData) {
+      return res.status(200).send(userData);
+    } else {
+      return res.status(404).send({ message: "User not found" });
+    }
+  } catch (er) {
+    return res.status(500).send({ message: er.message });
+  }
+});
+
 app.post("/", async (req, res) => {
   try {
     const db = await getDB();
