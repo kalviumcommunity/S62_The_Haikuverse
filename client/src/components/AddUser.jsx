@@ -1,23 +1,41 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import validationFormObject from "../validation";
 
 function AddUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !userId) {
-      setError("All fields are required.");
+    setErrors({ name: "", email: "", password: "" });
+
+
+    const nameValidation = validationFormObject.validateName(name);
+    const emailValidation = validationFormObject.validateEmail(email);
+    const passwordValidation = validationFormObject.validatePass(password);
+
+
+    const newErrors = {
+      name: nameValidation !== true ? nameValidation : "",
+      email: emailValidation !== true ? emailValidation : "",
+      password: passwordValidation !== true ? passwordValidation : "",
+    };
+    
+    setErrors(newErrors);
+
+
+    if (newErrors.name || newErrors.email || newErrors.password) {
       return;
     }
 
-    const newUser = { name, email, userId };
+    const newUser = { name, email, password };
 
     try {
       const response = await axios.post("http://localhost:8080/user-router", newUser);
@@ -46,9 +64,9 @@ function AddUser() {
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
+            className="w-full px-4 py-2 border border-gray-300 bg-white text-black"
           />
+          {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
         </div>
 
         <div className="mb-4">
@@ -60,23 +78,23 @@ function AddUser() {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
+            className="w-full px-4 py-2 border border-gray-300 bg-white text-black"
           />
+          {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
         </div>
 
         <div className="mb-4">
-          <label className="block text-lg font-medium text-blue-800 mb-2" htmlFor="userId">
-            User ID
+          <label className="block text-lg font-medium text-blue-800 mb-2" htmlFor="password">
+            Password
           </label>
           <input
-            type="text"
-            id="userId"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            required
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 bg-white text-black"
           />
+          {errors.password && <div className="text-red-500 text-sm mt-1">{errors.password}</div>}
         </div>
 
         <button

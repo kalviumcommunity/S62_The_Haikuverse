@@ -41,16 +41,13 @@ function Users() {
         <button className="bg-teal-500 text-white p-3 rounded-lg mb-6">Add New User</button>
       </Link>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-6">
         {users.length > 0 ? (
           users.map((user) => (
             <div key={user._id} className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white">
               <h3 className="text-2xl font-semibold mb-2 text-purple-400">{user.name}</h3>
               <p className="text-lg mb-1">
                 <span className="font-medium text-teal-200">Email:</span> {user.email}
-              </p>
-              <p className="text-lg">
-                <span className="font-medium text-teal-200">User ID:</span> {user.userId}
               </p>
               <div className="flex justify-between mt-4">
                 <Link to={`/update-user/${user._id}`}>
