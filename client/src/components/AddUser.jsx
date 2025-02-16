@@ -38,7 +38,7 @@ function AddUser() {
     const newUser = { name, email, password };
 
     try {
-      const response = await axios.post("http://localhost:8080/user-router", newUser);
+      const response = await axios.post("http://localhost:8080/user-router/user", newUser);
       if (response.status === 201) {
         navigate("/users");
       }
