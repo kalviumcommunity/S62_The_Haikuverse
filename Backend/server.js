@@ -26,7 +26,8 @@ app.get('/ping',(request,response)=>{
     response.send('Hello World!');
 });
 
-app.use('/user-router',require('./routes/routes.js'));
+app.use('/user-router',require('./routes/users.routes.js'));
+app.use('/poem-router',require('./routes/poems.routes.js'))
 
 app.listen(port,()=>{
     // connectDatabase();

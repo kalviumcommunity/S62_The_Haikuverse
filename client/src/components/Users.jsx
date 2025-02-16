@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 function Users() {
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userPoems, setUserPoems] = useState([]);
   const [error, setError] = useState(null);
 
   const fetchUsers = async () => {
@@ -16,13 +18,33 @@ function Users() {
     }
   };
 
+  const fetchUserPoems = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/user-router/user/${userId}/poems`);
+      setUserPoems(response.data);
+    } catch (error) {
+      setError("Error fetching poems");
+      console.error("Error fetching poems:", error);
+    }
+  };
+
   const deleteUser = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/user-router/${id}`);
-      setUsers(users.filter(user => user._id !== id)); 
+      setUsers(users.filter((user) => user._id !== id));
     } catch (error) {
       setError("Error deleting user");
       console.error("Error deleting user:", error);
+    }
+  };
+
+  const handleUserChange = (e) => {
+    const userId = e.target.value;
+    setSelectedUser(userId);
+    if (userId) {
+      fetchUserPoems(userId);
+    } else {
+      setUserPoems([]);
     }
   };
 
@@ -41,7 +63,40 @@ function Users() {
         <button className="bg-teal-500 text-white p-3 rounded-lg mb-6">Add New User</button>
       </Link>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-6">
+      <div className="mb-6">
+        <select
+          className="p-3 rounded-lg bg-teal-500 text-white"
+          value={selectedUser || ""}
+          onChange={handleUserChange}
+        >
+          <option value="">Select a user</option>
+          {users.length > 0 &&
+            users.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.name}
+              </option>
+            ))}
+        </select>
+      </div>
+
+      {selectedUser && userPoems.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-4">Poems:</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {userPoems.map((poem) => (
+              <div
+                key={poem._id}
+                className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white"
+              >
+                <h4 className="text-xl font-semibold mb-2 text-purple-400">{poem.title}</h4>
+                <p className="text-lg mb-1">{poem.content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
         {users.length > 0 ? (
           users.map((user) => (
             <div key={user._id} className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white">
