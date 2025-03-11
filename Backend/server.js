@@ -2,24 +2,25 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
   require('dotenv').config();
 }
 const express = require('express');
-
-const { getDB, connection } = require('./DB/mongo-client.js');
+const DBSQL = require('./DB/mysqlDB'); 
 const app = express();
 app.use(express.json());
-const port = process.env.PORT || 3000;
+const port = 8080;
 const cors = require('cors');
 app.use(cors());
 
+require('./model/mysqlSchema.js'); 
+require('./seedDB.js')
 
-app.get('/', async (req, res) => {
-  // Check the connection status
-  const checkStatus = await connection.connect();
-  const readyState = connection.topology.isConnected()
-    ? 'connected'
-    : 'disconnected';
+app.get('/', (req, res) => {
+  DBSQL.connect(err => {
+    if (err) {
+      console.error('MySQL connection error:', err);
+      return res.status(500).send('MySQL connection failed');
+    }
 
-  // Send the status as a response
-  res.send(`Database Connection Status: ${readyState}`);
+    res.send('Connected to MySQL Database');
+  });
 });
 
 app.get('/ping',(request,response)=>{
@@ -29,7 +30,6 @@ app.get('/ping',(request,response)=>{
 app.use('/user-router',require('./routes/users.routes.js'));
 app.use('/poem-router',require('./routes/poems.routes.js'))
 
-app.listen(port,()=>{
-    // connectDatabase();
-    console.log(`Your server is running on http://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Your server is running on http://localhost:${port}`);
 });

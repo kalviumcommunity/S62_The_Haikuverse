@@ -1,95 +1,124 @@
-const express = require("express");
-const { getDB } = require("../DB/mongo-client");
+const express = require('express');
+const mysqlDB = require('../DB/mysqlDB');
 const app = express.Router();
-const { ObjectId } = require('mongodb');
 
 
-app.post("/user", async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    
-    const db = await getDB("User");
-    const insertData = await db.insertOne({
-      name,
-      email,
-      poems: [] 
+app.use(express.json());
+
+app.post('/user', (req, res) => {
+    const { name, email, description, age } = req.body;
+
+    const query = 'INSERT INTO users (name, email, description, age) VALUES (?, ?, ?, ?)';
+
+    mysqlDB.query(query, [name, email, description, age], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.status(201).send({
+            message: 'User created successfully',
+            user: { id: result.insertId, name, email, description, age }
+        });
     });
+});
 
-    const user = await db.findOne({ _id: insertData.insertedId });
+app.get('/user', (req, res) => {
+    const query = 'SELECT * FROM users';
 
-    return res.status(201).send({
-      message: "User created successfully",
-      user,
+    mysqlDB.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.status(200).send(results);
     });
-  } catch (er) {
-    return res.status(500).send({ message: er.message });
-  }
 });
 
-app.get("/user", async (req, res) => {
-  try {
-    const db = await getDB("User");
-    const userData = await db.find().toArray();
-    return res.status(200).send(userData);
-  } catch (er) {
-    return res.status(500).send({ message: er.message });
-  }
-});
-
-
-app.delete("/:id", async (req, res) => {
-  try {
-    const db = await getDB("User");
+app.put('/user/:id', (req, res) => {
     const { id } = req.params;
-    const deleteUser = await db.deleteOne({ _id: new ObjectId(id) });
-    return res
-      .status(200)
-      .send({ message: "Deleted successfully", deleteUser });
-  } catch (er) {
-    return res.status(500).send({ message: er.message });
-  }
+    const { name, email, description, age } = req.body;
+
+    const query = 'UPDATE users SET name = ?, email = ?, description = ?, age = ? WHERE id = ?';
+
+    mysqlDB.query(query, [name, email, description, age, id], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        return res.status(200).send({ message: 'User updated successfully' });
+    });
 });
 
-app.put("/user/:id", async (req, res) => {
-  try {
-    const db = await getDB("User");
+app.delete('/user/:id', (req, res) => {
     const { id } = req.params;
-    let { password, ...userData } = req.body;
 
-    if (password) {
-      password = await bcrypt.hash(password, 10);
-      userData.password = password;
-    }
+    const query = 'DELETE FROM users WHERE id = ?';
 
-    const updateUser = await db.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: userData }
-    );
-    return res.status(200).send({ message: "Updated successfully", updateUser });
-  } catch (er) {
-    return res.status(500).send({ message: er.message });
-  }
+    mysqlDB.query(query, [id], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        return res.status(200).send({ message: 'User deleted successfully' });
+    });
 });
 
-
-app.get("/user/:id/poems", async (req, res) => {
-  try {
-    const db = await getDB("User");
+app.get('/user/:id', (req, res) => {
     const { id } = req.params;
-    
-    const user = await db.findOne({ _id: new ObjectId(id) });
 
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
+    const query = 'SELECT * FROM users WHERE id = ?';
 
-    const poemDb = await getDB("poems");
-    const poems = await poemDb.find({ _id: { $in: user.poems.map(poemId => new ObjectId(poemId)) } }).toArray();
+    mysqlDB.query(query, [id], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
 
-    return res.status(200).send(poems);
-  } catch (er) {
-    return res.status(500).send({ message: er.message });
-  }
+        if (result.length === 0) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        return res.status(200).send(result[0]);
+    });
+});
+
+app.get('/user/:id/poems', (req, res) => {
+    const { id } = req.params;
+
+    const query = 'SELECT * FROM poems WHERE user_id = ?';
+
+    mysqlDB.query(query, [id], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.status(200).send(result);
+    });
+});
+
+app.post('/user/:id/poems', (req, res) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+
+    const query = 'INSERT INTO poems (user_id, title, content) VALUES (?, ?, ?)';
+
+    mysqlDB.query(query, [id, title, content], (err, result) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.status(201).send({
+            message: 'Poem created successfully',
+            poem: { id: result.insertId, user_id: id, title, content }
+        });
+    });
 });
 
 module.exports = app;

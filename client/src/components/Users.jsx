@@ -19,8 +19,10 @@ function Users() {
   };
 
   const fetchUserPoems = async (userId) => {
+    console.log("Selected User ID:", userId); 
     try {
       const response = await axios.get(`http://localhost:8080/user-router/user/${userId}/poems`);
+      console.log("Fetched Poems: ", response.data);
       setUserPoems(response.data);
     } catch (error) {
       setError("Error fetching poems");
@@ -40,6 +42,7 @@ function Users() {
 
   const handleUserChange = (e) => {
     const userId = e.target.value;
+    console.log("User Selected ID:", userId); 
     setSelectedUser(userId);
     if (userId) {
       fetchUserPoems(userId);
@@ -85,7 +88,7 @@ function Users() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {userPoems.map((poem) => (
               <div
-                key={poem._id}
+                key={poem.id}
                 className="flex flex-col p-6 bg-opacity-80 bg-blue-800 rounded-lg shadow-lg text-white"
               >
                 <h4 className="text-xl font-semibold mb-2 text-purple-400">{poem.title}</h4>
